@@ -6,7 +6,7 @@ from .models import User, Types, Address
 class AddressSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     street = serializers.CharField(max_length=100)
-    number = serializers.IntegerField()
+    number = serializers.CharField(max_length=10)
     state = serializers.CharField(max_length=2)
     city = serializers.CharField(max_length=50)
 
@@ -53,3 +53,24 @@ class UserSerializer(serializers.Serializer):
         if address_dict:
             Address.objects.create(**address_dict, user=user)
         return user
+
+    def update(self, instance: User, validated_data: dict):
+
+        address_dict: dict = validated_data.pop("address", None)
+
+        if address_dict:
+            address_obj, created = Address.objects.get_or_create(user=instance)
+            for key, value in address_dict.items():
+                setattr(address_obj, key, value)
+            address_obj.save()
+
+        for key, value in validated_data.items():
+            print(value)
+            if key == "password":
+                instance.set_password(value)
+            else:
+                setattr(instance, key, value)
+
+        instance.save()
+
+        return instance

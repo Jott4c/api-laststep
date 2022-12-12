@@ -18,13 +18,16 @@ class UserView(APIView):
         return Response(serializer.data, status.HTTP_201_CREATED)
 
     def get(self, request: Request) -> Response:
-        user = get_object_or_404(User, id=request.user.id)
-        serializer = UserSerializer(user)
+        user = User.objects.all()
+        serializer = UserSerializer(user, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UserDetailView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = []
+
     def patch(self, request: Request, user_id: int):
         user = get_object_or_404(User, id=user_id)
 
@@ -33,3 +36,9 @@ class UserDetailView(APIView):
         serializer.save()
 
         return Response(serializer.data, status.HTTP_200_OK)
+
+    def get(self, request: Request, user_id: int) -> Response:
+        user = get_object_or_404(User, id=request.user.id)
+        serializer = UserSerializer(user)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

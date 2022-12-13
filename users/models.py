@@ -9,7 +9,7 @@ class Types(models.TextChoices):
 
 class User(AbstractUser):
     age = models.DateField()
-    phone = models.CharField(max_length=14)
+    phone = models.CharField(max_length=15)
     url_image = models.CharField(max_length=270, null=True)
     type = models.CharField(
         max_length=50,

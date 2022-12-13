@@ -35,7 +35,7 @@ class UserSerializer(serializers.Serializer):
     first_name = serializers.CharField(max_length=50)
     last_name = serializers.CharField(max_length=50)
     age = serializers.DateField()
-    phone = serializers.CharField(max_length=14)
+    phone = serializers.CharField(max_length=15)
     url_image = serializers.CharField(max_length=270, required=False)
     type = serializers.ChoiceField(
         choices=Types.choices,
